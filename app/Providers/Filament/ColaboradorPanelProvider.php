@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Providers\Filament;
+
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Widgets;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+
+class ColaboradorPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ->id('colaborador')
+            ->path('colaborador')
+            ->brandName('GESTREIN')
+            ->colors([
+                'primary' => Color::hex('#1a1f3a'), // Azul escuro do logo (dark blue - triângulo externo)
+                'danger' => Color::hex('#ff6b35'), // Laranja vibrante do logo (vibrant orange - triângulo pequeno)
+                'info' => Color::hex('#3b82f6'), // Azul claro do logo (bright blue - triângulo médio)
+                'success' => Color::hex('#22c55e'),
+                'warning' => Color::hex('#f59e0b'),
+            ])
+            ->discoverPages(in: app_path('Filament/Colaborador/Pages'), for: 'App\\Filament\\Colaborador\\Pages')
+            ->pages([
+                Pages\Dashboard::class,
+            ])
+            ->discoverWidgets(in: app_path('Filament/Colaborador/Widgets'), for: 'App\\Filament\\Colaborador\\Widgets')
+            ->widgets([
+                Widgets\AccountWidget::class,
+            ])
+            ->middleware([
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                AuthenticateSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                SubstituteBindings::class,
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+            ])
+            ->authMiddleware([
+                Authenticate::class,
+                \App\Http\Middleware\EnsureUserIsColaborador::class,
+            ])
+            ->login()
+            ->authGuard('web')
+            ->authPasswordBroker('users');
+    }
+}
+

@@ -1,0 +1,136 @@
+models:
+  Empresa:
+    idEmpresa: id
+    Nome: string:255
+    Cnpj: string:18 unique
+    Endereco: string:45 nullable
+    Cidade: string:100 nullable
+    Estado: char:2 nullable
+    Cep: string:10 nullable
+    Telefone: string:20 nullable
+    Email_contato: string:225 nullable
+    Ativo: tinyInteger default(1)
+    Numero_colaboradores: integer default(0)
+    Data_cadastrado: timestamp nullable
+    timestamps: false
+    relationships:
+      hasMany: User
+
+  Setor:
+    idsetor: id
+    Nome_setor: string:45
+    timestamps: false
+    relationships:
+      hasMany:
+        - User
+        - Calendario
+
+  Treinamento:
+    idTreinamento: id
+    Nome: string:225
+    Descricao: text:3000 nullable
+    Carga_horaria: integer
+    Tipo: enum('obrigatorio', 'opcional', 'reciclagem', 'inicial')
+    Modalidade: enum('presencial', 'online', 'hibrido')
+    Validade_meses: integer
+    requer_validacao_pratica: tinyInteger default(0)
+    Data_da_criacao: timestamp nullable
+    Status: enum('ativo', 'inativo', 'arquivado') default('ativo')
+    timestamps: false
+    relationships:
+      hasMany:
+        - Etapa
+        - Turma
+        - Calendario
+
+  Etapa:
+    idetapa: id
+    Nome: string:255 nullable
+    Descricao: text nullable
+    Ordem: integer nullable
+    Treinamento_idTreinamento: foreignId references:treinamentos
+    timestamps: false
+    relationships:
+      belongsTo: Treinamento
+      belongsToMany: Turma through:cronograma_etapas
+
+  Turma:
+    aluno_id: foreignId references:users
+    instrutor_id: foreignId references:users nullable
+    treinamento_id: foreignId references:treinamentos
+    Data_vinculo: timestamp nullable
+    Data_prevista_conclusao: date nullable
+    Data_conclusao: date nullable
+    Etapa_teorica_status: enum('pendente', 'em_andamento', 'concluida', 'cancelada') nullable
+    Etapa_teorica_data: date nullable
+    Etapa_pratica_data: timestamp nullable
+    Status_geral: enum('pendente', 'em_andamento', 'concluida', 'cancelada') default('pendente')
+    Forma_realizacao: enum('presencial', 'online', 'hibrido') nullable
+    Observacao: text:500 nullable
+    timestamps: true
+    relationships:
+      belongsTo:
+        - User as aluno
+        - User as instrutor
+        - Treinamento
+      belongsToMany:
+        - Etapa through:cronograma_etapas
+
+  CronogramaEtapas:
+    turma_id: foreignId references:turmas
+    etapa_id: foreignId references:etapas
+    data: timestamp nullable
+    observacao: string:255 nullable
+    Status: enum('agendado', 'realizado', 'cancelado') default('agendado')
+    timestamps: true
+    relationships:
+      belongsTo:
+        - Turma
+        - Etapa
+
+  Certificado:
+    idCertificado: id
+    Codigo_unico: string:45 unique
+    Data_emissao: timestamp nullable
+    Caminho_pdf: string:500 nullable
+    user_id: foreignId references:users
+    turma_id: foreignId references:turmas nullable
+    timestamps: true
+    relationships:
+      belongsTo: User
+
+  Notificacao:
+    idNotificacao: id
+    Mensagem: string:500
+    Tipo: enum('vencimento', 'alerta', 'info', 'sucesso', 'erro')
+    Lida: tinyInteger default(0)
+    Data_criacao: timestamp nullable
+    user_id: foreignId references:users
+    timestamps: true
+    relationships:
+      belongsTo: User
+
+  Periodo:
+    idperiodo: id
+    Nome: string:100 nullable
+    Data_inicio: date nullable
+    Data_fim: date nullable
+    timestamps: false
+    relationships:
+      hasMany: Calendario
+
+  Calendario:
+    Treinamento_idTreinamento: foreignId references:treinamentos
+    periodo_idperiodo: foreignId references:periodos
+    setor_idsetor: foreignId references:setors nullable
+    data_prevista: timestamp nullable
+    descricao: string:256 nullable
+    timestamps: false
+    relationships:
+      belongsTo:
+        - Treinamento
+        - Periodo
+        - Setor
+
+controllers:
+  # ...

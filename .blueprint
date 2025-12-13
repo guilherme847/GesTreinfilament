@@ -1,0 +1,49 @@
+created:
+    - database/factories/EmpresaFactory.php
+    - database/factories/SetorFactory.php
+    - database/factories/UsuarioFactory.php
+    - database/factories/TreinamentoFactory.php
+    - database/factories/EtapaFactory.php
+    - database/factories/TurmaFactory.php
+    - database/factories/CronogramaEtapasFactory.php
+    - database/factories/CertificadoFactory.php
+    - database/factories/NotificacaoFactory.php
+    - database/factories/PeriodoFactory.php
+    - database/factories/CalendarioFactory.php
+    - database/migrations/2025_11_30_154859_create_empresas_table.php
+    - database/migrations/2025_11_30_154900_create_setors_table.php
+    - database/migrations/2025_11_30_154901_create_usuarios_table.php
+    - database/migrations/2025_11_30_154902_create_treinamentos_table.php
+    - database/migrations/2025_11_30_154903_create_etapas_table.php
+    - database/migrations/2025_11_30_154904_create_turmas_table.php
+    - database/migrations/2025_11_30_154905_create_cronograma_etapas_table.php
+    - database/migrations/2025_11_30_154906_create_certificados_table.php
+    - database/migrations/2025_11_30_154907_create_notificacaos_table.php
+    - database/migrations/2025_11_30_154908_create_periodos_table.php
+    - database/migrations/2025_11_30_154909_create_calendarios_table.php
+    - database/migrations/2025_11_30_154910_create_etapa_turma_through_table.php
+    - database/migrations/2025_11_30_154911_create_etapa_through_turma_table.php
+    - app/Models/Empresa.php
+    - app/Models/Setor.php
+    - app/Models/Usuario.php
+    - app/Models/Treinamento.php
+    - app/Models/Etapa.php
+    - app/Models/Turma.php
+    - app/Models/CronogramaEtapas.php
+    - app/Models/Certificado.php
+    - app/Models/Notificacao.php
+    - app/Models/Periodo.php
+    - app/Models/Calendario.php
+models:
+    User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Empresa: { idEmpresa: id, Nome: 'string:255', Cnpj: 'string:18 unique', Endereco: 'string:45 nullable', Cidade: 'string:100 nullable', Estado: 'char:2 nullable', Cep: 'string:10 nullable', Telefone: 'string:20 nullable', Email_contato: 'string:225 nullable', Ativo: 'tinyInteger default(1)', Numero_colaboradores: 'integer default(0)', Data_cadastrado: 'timestamp nullable', timestamps: false, relationships: { hasMany: Usuario } }
+    Setor: { idsetor: id, Nome_setor: 'string:45', timestamps: false, relationships: { hasMany: 'Usuario Calendario' } }
+    Usuario: { idUsuario: id, Nome: 'string:225', Email: 'string:225 unique', Senha: 'string:8', Tipo: "enum('admin', 'tecnico_seguranca', 'rh', 'instrutor', 'colaborador')", Setor: 'string:100 nullable', Funcao: 'string:100 nullable', Ativo: 'tinyInteger default(1)', Data_Cadastro: 'timestamp nullable', Data_desligamento: 'date nullable', Empresa_idEmpresa: 'foreignId references:empresas', setor_idsetor: 'foreignId references:setors nullable', timestamps: false, relationships: { belongsTo: 'Empresa Setor', hasMany: 'Notificacao Certificado Turma as aluno Turma as instrutor' } }
+    Treinamento: { idTreinamento: id, Nome: 'string:225', Descricao: 'text:3000 nullable', Carga_horaria: integer, Tipo: "enum('obrigatorio', 'opcional', 'reciclagem', 'inicial')", Modalidade: "enum('presencial', 'online', 'hibrido')", Validade_meses: integer, requer_validacao_pratica: 'tinyInteger default(0)', Data_da_criacao: 'timestamp nullable', Status: "enum('ativo', 'inativo', 'arquivado') default('ativo')", timestamps: false, relationships: { hasMany: 'Etapa Turma Calendario' } }
+    Etapa: { idetapa: id, Nome: 'string:255 nullable', Descricao: 'text nullable', Ordem: 'integer nullable', Treinamento_idTreinamento: 'foreignId references:treinamentos', timestamps: false, relationships: { belongsTo: Treinamento, belongsToMany: 'Turma through:cronograma_etapas' } }
+    Turma: { aluno: 'foreignId references:usuarios', instrutor: 'foreignId references:usuarios nullable', Treinamento_idTreinamento: 'foreignId references:treinamentos', Data_vinculo: 'timestamp nullable', Data_prevista_conclusao: 'date nullable', Data_conclusao: 'date nullable', Etapa_teorica_status: "enum('pendente', 'em_andamento', 'concluida', 'cancelada') nullable", Etapa_teorica_data: 'date nullable', Etapa_pratica_data: 'timestamp nullable', Status_geral: "enum('pendente', 'em_andamento', 'concluida', 'cancelada') default('pendente')", Foma_realizacao: "enum('presencial', 'online', 'hibrido') nullable", Observacao: 'text:500 nullable', timestamps: false, relationships: { belongsTo: 'Usuario as aluno Usuario as instrutor Treinamento', belongsToMany: 'Etapa through:cronograma_etapas' } }
+    CronogramaEtapas: { Turma_aluno: 'foreignId references:usuarios', Turma_Treinamento_idTreinamento: 'foreignId references:treinamentos', etapa_idetapa: 'foreignId references:etapas', data: 'timestamp nullable', cronograma_etapascol: 'string:45 nullable', Status: "enum('agendado', 'realizado', 'cancelado') default('agendado')", timestamps: false, relationships: { belongsTo: 'Turma Etapa' } }
+    Certificado: { idCertificado: id, Codigo_unico: 'string:45 unique', Data_emissao: 'timestamp nullable', Caminho_pdf: 'string:500 nullable', Usuario_idUsuario: 'foreignId references:usuarios', Turma_aluno: 'foreignId references:usuarios nullable', Turma_Treinamento_idTreinamento: 'foreignId references:treinamentos nullable', timestamps: false, relationships: { belongsTo: Usuario } }
+    Notificacao: { idNotificacao: id, Mensagem: 'string:500', Tipo: "enum('vencimento', 'alerta', 'info', 'sucesso', 'erro')", Lida: 'tinyInteger default(0)', Data_criacao: 'timestamp nullable', Usuario_idUsuario: 'foreignId references:usuarios', timestamps: false, relationships: { belongsTo: Usuario } }
+    Periodo: { idperiodo: id, Nome: 'string:100 nullable', Data_inicio: 'date nullable', Data_fim: 'date nullable', timestamps: false, relationships: { hasMany: Calendario } }
+    Calendario: { Treinamento_idTreinamento: 'foreignId references:treinamentos', periodo_idperiodo: 'foreignId references:periodos', setor_idsetor: 'foreignId references:setors nullable', data_prevista: 'timestamp nullable', descricao: 'string:256 nullable', timestamps: false, relationships: { belongsTo: 'Treinamento Periodo Setor' } }
