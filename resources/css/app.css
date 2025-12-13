@@ -8,4 +8,145 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    
+    /* Cores da marca GESTREIN - definidas no tema para gerar classes automaticamente */
+    --color-gestrein-navy: #1a1f3a;
+    --color-gestrein-blue: #3b82f6;
+    --color-gestrein-orange: #ff6b35;
+    --color-gestrein-beige: #f5f1e8;
+    --color-gestrein-navy-light: #2d3550;
+    --color-gestrein-blue-light: #60a5fa;
+    --color-gestrein-orange-light: #ff8c5a;
+}
+
+/* Classes utilitárias para as cores da marca - garantem funcionamento mesmo sem compilação */
+.bg-gestrein-navy {
+    background-color: #1a1f3a !important;
+}
+
+.bg-gestrein-blue {
+    background-color: #3b82f6 !important;
+}
+
+.bg-gestrein-orange {
+    background-color: #ff6b35 !important;
+}
+
+.bg-gestrein-beige {
+    background-color: #f5f1e8 !important;
+}
+
+.text-gestrein-navy {
+    color: #1a1f3a !important;
+}
+
+.text-gestrein-blue {
+    color: #3b82f6 !important;
+}
+
+.text-gestrein-orange {
+    color: #ff6b35 !important;
+}
+
+.border-gestrein-navy {
+    border-color: #1a1f3a !important;
+}
+
+.border-gestrein-blue {
+    border-color: #3b82f6 !important;
+}
+
+.border-gestrein-orange {
+    border-color: #ff6b35 !important;
+}
+
+.hover\:bg-gestrein-navy:hover {
+    background-color: #1a1f3a !important;
+}
+
+.hover\:bg-gestrein-blue:hover {
+    background-color: #3b82f6 !important;
+}
+
+.hover\:bg-gestrein-orange:hover {
+    background-color: #ff6b35 !important;
+}
+
+.hover\:text-gestrein-navy:hover {
+    color: #1a1f3a !important;
+}
+
+.hover\:text-gestrein-blue:hover {
+    color: #3b82f6 !important;
+}
+
+.hover\:text-gestrein-orange:hover {
+    color: #ff6b35 !important;
+}
+
+.hover\:text-gestrein-orange-light:hover {
+    color: #ff8c5a !important;
+}
+
+.hover\:bg-gestrein-navy-light:hover {
+    background-color: #2d3550 !important;
+}
+
+.hover\:bg-gestrein-orange-light:hover {
+    background-color: #ff8c5a !important;
+}
+
+/* Botões estilizados com a marca */
+.btn-gestrein-primary {
+    background-color: #1a1f3a !important;
+    color: white !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+.btn-gestrein-primary:hover {
+    background-color: #2d3550 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    color: white !important;
+}
+
+.btn-gestrein-secondary {
+    background-color: #3b82f6 !important;
+    color: white !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+.btn-gestrein-secondary:hover {
+    background-color: #60a5fa !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    color: white !important;
+}
+
+.btn-gestrein-accent {
+    background-color: #ff6b35 !important;
+    color: white !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+.btn-gestrein-accent:hover {
+    background-color: #ff8c5a !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    color: white !important;
 }

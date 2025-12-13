@@ -17,6 +17,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('avatar')->nullable();
+            $table->enum('tipo', ['admin', 'tecnico_seguranca', 'rh', 'instrutor', 'colaborador'])->default('colaborador');
+            $table->string('setor', 100)->nullable();
+            $table->string('funcao', 100)->nullable();
+            $table->boolean('ativo')->default(true);
+            $table->timestamp('data_cadastro')->nullable();
+            $table->date('data_desligamento')->nullable();
+            $table->foreignId('empresa_id')->nullable();
+            $table->foreignId('setor_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
